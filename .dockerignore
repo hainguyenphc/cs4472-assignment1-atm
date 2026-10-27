@@ -1,0 +1,9 @@
+.git
+.github
+target
+docs
+*.pdf
+*.db
+.idea
+.vscode
+.DS_Store

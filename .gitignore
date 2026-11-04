@@ -99,3 +99,6 @@ $RECYCLE.BIN/
 *.swo
 *.bak
 *.tmp
+
+# test db files
+*.db

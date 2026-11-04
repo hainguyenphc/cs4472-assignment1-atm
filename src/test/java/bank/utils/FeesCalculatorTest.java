@@ -60,4 +60,32 @@ class FeesCalculatorTest {
 				() -> calculator.calculateDepositInterest(amount, balance, student));
 	}
 
+	// Spec: Assignment 1, "Transfer" fee rules. Technique: Decision Table Analysis.
+	// Test-case IDs match docs/hai_assignment1.md. One test case per rule (R1 to R16).
+	// "Small" amount: < 200 (student), < 100 (non-student).
+	// "Low" from balance: < 2000 (student, and non-student amount >= 100), < 4000 (non-student amount < 100).
+	// "Low" to balance: < 1000 (student, and non-student amount >= 100), < 2000 (non-student amount < 100).
+	@ParameterizedTest(name = "{0}: student={1}, amount={2}, from={3}, to={4} -> fee={5}")
+	@CsvSource({
+		"T-01, true, 100, 1000, 500, 0.1",			// R1: student, small, low from, low to: 0.1%
+		"T-02, true, 100, 1000, 1500, 0.05",		// R2: student, small, low from, high to: 0.05%
+		"T-03, true, 100, 3000, 500, 0.05",			// R3: student, small, high from, low to: 0.05%
+		"T-04, true, 100, 3000, 1500, 0.025",		// R4: student, small, high from, high to: 0.025%
+		"T-05, true, 500, 1000, 500, 0.25",			// R5: student, large, low from, low to: 0.05%
+		"T-06, true, 500, 1000, 1500, 0.125",		// R6: student, large, low from, high to: 0.025%
+		"T-07, true, 500, 3000, 500, 1.25",			// R7: student, large, high from, low to: 0.25%
+		"T-08, true, 500, 3000, 1500, 0.625",		// R8: student, large, high from, high to: 0.125%
+		"T-09, false, 50, 2000, 1000, 0.1",			// R9: non-student, small, low from, low to: 0.2%
+		"T-10, false, 50, 2000, 3000, 0.05",		// R10: non-student, small, low from, high to: 0.1%
+		"T-11, false, 50, 6000, 1000, 0.5",			// R11: non-student, small, high from, low to: 1%
+		"T-12, false, 50, 6000, 3000, 0.25",		// R12: non-student, small, high from, high to: 0.5%
+		"T-13, false, 500, 1000, 500, 1.0",			// R13: non-student, large, low from, low to: 0.2%
+		"T-14, false, 500, 1000, 1500, 0.5",		// R14: non-student, large, low from, high to: 0.1%
+		"T-15, false, 500, 3000, 500, 2.5",			// R15: non-student, large, high from, low to: 0.5%
+		"T-16, false, 500, 3000, 1500, 1.25",		// R16: non-student, large, high from, high to: 0.25%
+	})
+	void transferTest(String id, boolean student, double amount, double from, double to, double fee) {
+		assertEquals(fee, calculator.calculateTransferFee(amount, from, to, student), DELTA);
+	}
+
 }

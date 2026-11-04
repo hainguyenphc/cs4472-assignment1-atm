@@ -24,15 +24,20 @@ larger than the daily limit, the daily limit ($1,000) is the upper boundary for 
 
 Robust Worst Case Boundary Value Analysis takes seven values for each input variable: **min-**, **min**,
 **min+**, **nom**, **max-**, **max**, **max+**. *Robust* adds the two values just outside the valid range
-(min- and max+). *Worst case* takes the Cartesian product of the values of all variables. Under the
-**single fault assumption**, a test case may contain at most one invalid value. Every other input is held at
-its nominal value, so any combination with two invalid values is dropped.
+(min- and max+). *Worst case* takes the Cartesian product of the values of all variables, which gives 7^n
+test cases for n variables (Lecture 2 Part 2, slides 13-17).
 
-I identified the following input variables:
+Worst case testing normally rejects the **single fault assumption** (Lecture 2 Part 2, slide 15). As the
+instructor clarified, the two test targets, the PIN and the withdrawal amount, are tested **separately, not
+together**. Each target is therefore a **single input variable** (n = 1), and the Cartesian product of one
+variable is just its own seven values. Robust worst case analysis and the single fault assumption therefore
+give the same test cases: each test case contains at most one invalid value, and every other input is held
+at its nominal value.
+
+The two input variables are:
 
 1. **Withdrawal amount** (integer dollars). Valid range: $20 (the smallest amount that can be dispensed, one
-   $20 bill) to $1,000 (the daily limit). Because this is a single variable, worst case analysis gives the
-   seven robust boundary values directly:
+   $20 bill) to $1,000 (the daily limit). The seven robust worst case values are:
 
    | min- | min | min+ | nom | max- | max | max+ |
    |---|---|---|---|---|---|---|
@@ -42,19 +47,19 @@ I identified the following input variables:
    bills, so the specification makes them **invalid**. The nominal value (500) was chosen so that it is
    dispensable (10 x $50).
 
-2. **PIN length.** The valid range is degenerate (min = max = nom = 5), so the robust values collapse to
-   **4** (min-), **5** (valid) and **6** (max+).
+2. **PIN** (a sequence of characters). The rule "a valid PIN is 5 digits" bounds this one variable in two
+   ways, and I applied boundary values to each, changing only one at a time (nominal PIN `55555`):
+   - **Length.** The valid range is degenerate (min = max = nom = 5), so the robust values collapse to
+     **4** (min-), **5** (valid) and **6** (max+).
+   - **Character value.** Each character must be a digit `'0'`-`'9'`. The robust values are the characters
+     immediately outside that range in the character set: `'/'` (min-, just below `'0'`) and `':'` (max+,
+     just above `'9'`). Together: `'/'`, `'0'`, `'1'`, `'5'` (nom), `'8'`, `'9'`, `':'`. I applied these
+     values to the **boundary positions** of the PIN (position 1 and position 5) and held the interior
+     positions at the nominal digit `'5'`.
 
-3. **PIN digit value.** Each character must be a digit `'0'`-`'9'`. The robust values are the characters
-   immediately outside that range in the character set: `'/'` (min-, just below `'0'`) and `':'` (max+, just
-   above `'9'`). Together: `'/'`, `'0'`, `'1'`, `'5'` (nom), `'8'`, `'9'`, `':'`. I applied these values to
-   the **boundary positions** of the PIN (position 1 and position 5) and held the interior positions at the
-   nominal digit `'5'`.
+   A PIN with a wrong length *and* an invalid character would contain two faults, so it is excluded.
 
-The PIN cases are the worst case product of the valid length (5) with the seven digit values at each boundary
-position, plus the two invalid lengths with nominal digits. A test with an invalid length *and* an invalid
-digit would contain two faults and is excluded. Duplicate nominal cases were merged, giving **15 PIN cases**
-and **7 amount cases** (22 in total).
+Duplicate nominal cases were merged, giving **15 PIN cases** and **7 amount cases** (22 in total).
 
 ### Assumptions
 
@@ -74,7 +79,8 @@ and **7 amount cases** (22 in total).
 - **A7 - Nominal values.** Whenever a variable is not under test it is held at its nominal value: card
   `4000000000000000`, PIN `55555`, transaction Withdrawal, account Chequing, amount $500.
 - **A8 - Independent inputs.** The PIN and the amount are entered at different steps, and the amount rule
-  does not depend on the PIN value, so the two inputs are analysed separately. Amount test cases drive
+  does not depend on the PIN value, so the two inputs are analysed separately (confirmed by the
+  instructor). Amount test cases drive
   `Session` directly with the nominal PIN so that a PIN fault cannot mask the amount result.
 - **A9 - Expected outcome for valid input.** For valid input the expected outcome is that no exception is
   thrown and the session moves on to the next step.

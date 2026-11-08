@@ -9,6 +9,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+// Spec: Assignment 1, "Withdrawal" fee rules. Technique: Robust Worst Case BVA.
+// Test-case IDs (W-1 to W-216) match docs/assignment1.md, Appendix A.
 class WithdrawalFeeTest {
     private static final double DELTA = 0.000000001;
     private static final double[] AMOUNTS = { 0.01, 0.02, 100.00 };

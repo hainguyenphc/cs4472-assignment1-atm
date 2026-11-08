@@ -22,7 +22,7 @@ import bank.transactions.utils.TransactionResult;
 
 // Black-box tests for the ATM session, withdrawal only.
 // Spec: Assignment 1, "ATM Session" (PIN = 5 digits; amount in $20/$50 bills, max $1,000 daily limit).
-// Technique: Robust Worst Case BVA, single fault assumption. Test-case IDs match docs/shane_assignment1.md.
+// Technique: Robust Worst Case BVA, single fault assumption. Test-case IDs match docs/assignment1.md.
 class SessionTest {
   private static final String CARD = "4000000000000000";
   private static final String NOMINAL_PIN = "55555";

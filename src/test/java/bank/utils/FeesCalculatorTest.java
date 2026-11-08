@@ -54,7 +54,7 @@ class FeesCalculatorTest {
 	}
 
 	// Spec: Assignment 1, "Deposit" fee rules. Technique: Weak Robust Equivalence Class Analysis.
-	// Test-case IDs match docs/hai_assignment1.md.
+	// Test-case IDs match docs/assignment1.md.
 	// Valid classes: one per rule of the deposit fee specification (D-01 to D-08),
 	// each tested with a value from the middle of the class.
 	@ParameterizedTest(name = "{0}: student={1}, amount={2}, balance={3} -> fee={4}")
@@ -116,7 +116,7 @@ class FeesCalculatorTest {
 	}
 
 	// Spec: Assignment 1, "Transfer" fee rules. Technique: Decision Table Analysis.
-	// Test-case IDs match docs/hai_assignment1.md. One test case per rule (R1 to R16).
+	// Test-case IDs match docs/assignment1.md. One test case per rule (R1 to R16).
 	// "Small" amount: < 200 (student), < 100 (non-student).
 	// "Low" from balance: < 2000 (student, and non-student amount >= 100), < 4000 (non-student amount < 100).
 	// "Low" to balance: < 1000 (student, and non-student amount >= 100), < 2000 (non-student amount < 100).
